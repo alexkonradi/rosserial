@@ -503,7 +503,10 @@ def MakeLibrary(package, output_path, rospack):
                 # add to list of messages
                 print('%s,'%f[0:-4], end='')
                 definition = open(file).readlines()
-                md5sum = roslib.message.get_message_class(package+'/'+f[0:-4])._md5sum
+                message = roslib.message.get_message_class(package+'/'+f[0:-4])
+                if message == None:
+                    raise Exception("Couldn't find class for " + package + '/' + f[0:-4] + "; did you forget a dependency?")
+                md5sum = message._md5sum
                 messages.append( Message(f[0:-4], package, definition, md5sum) )
 
     # find the services in this package
